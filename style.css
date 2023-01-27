@@ -1,0 +1,48 @@
+:root {
+    --sqr-color-1: #ff35c2;
+    --sqr-color-2: #4fa8fb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    border: 1px solid brown;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+}
+
+div:not(.cols) {
+    border: 1px solid black;
+    width: 80px;
+    height: 80px;
+}
+
+div:not(.cols):hover {
+    opacity: 0.8;
+}
+
+.cols:nth-child(odd) > div:nth-child(even), .cols:nth-child(even) > div:nth-child(odd){
+    background-color: var(--sqr-color-1);
+}
+.cols:nth-child(odd) > div:nth-child(odd), .cols:nth-child(even) > div:nth-child(even){
+    background-color: var(--sqr-color-2);
+}
+
+.edit-color {
+    align-self: flex-end;
+}
+
+.selected {
+    background-color: yellow !important;
+}

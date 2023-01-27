@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "js-chess-engine": "^1.0.2",
+    "prompt-sync": "^4.2.0"
+  }
+}
