@@ -43,6 +43,12 @@ div:not(.cols):hover {
     align-self: flex-end;
 }
 
+.cols  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .selected {
     background-color: yellow !important;
 }
