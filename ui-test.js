@@ -7,11 +7,13 @@ const squareSelection = () => {
         let isSelected = sqr.classList.contains('selected');
         let selectedIndex = squares.indexOf(sqr);
 
-        isSelected ? sqr.classList.remove('selected')
-            : sqr.classList.add('selected');
-
-        cleanPrevSelectedSqr(selectedIndex, squares);
-        getCoordsFromSelectedSqr(sqr);
+        if (sqr.firstChild) {
+            isSelected ? sqr.classList.remove('selected')
+                : sqr.classList.add('selected');
+    
+            cleanPrevSelectedSqr(selectedIndex, squares);
+            getCoordsFromSelectedSqr(sqr);
+        }
     }));
 
     /*
@@ -57,7 +59,7 @@ const getSquareFromCoordsString = (coords) => {
             return row;
     })
 
-    console.log(square);
+    //console.log(square);
     return square;
 }
 
@@ -102,11 +104,11 @@ const initWhitePieces = () => {
     populateSquare('D2', 'p');
     populateSquare('E1', 'k');
     populateSquare('E2', 'p');
-    populateSquare('F1', 'r');
+    populateSquare('F1', 'b');
     populateSquare('F2', 'p');
     populateSquare('G1', 'n');
     populateSquare('G2', 'p');
-    populateSquare('H1', 'b');
+    populateSquare('H1', 'r');
     populateSquare('H2', 'p');
 }
 
@@ -124,6 +126,6 @@ themeSwitch();
 //_showSquaresIndexes();
 //getSquareFromCoordsString('H3');
 initWhitePieces();
-
+//populateSquare('E5', 'q');
 
 
