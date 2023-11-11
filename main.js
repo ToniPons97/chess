@@ -14,9 +14,9 @@ const main = async () => {
     while(userMove !== 'EXIT') {
         let isWhitesTurn = counter % 2 === 0;
         if (isWhitesTurn) {
-            userMove = prompt('Enter your move: ').toUpperCase();
+            userMove = prompt('Enter your move: ');
             const [from, to] = userMove.split(' ');
-            
+                        
             try {
                 game.move(from, to);
                 game.printToConsole();
