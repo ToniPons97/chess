@@ -1,5 +1,6 @@
 // All squares array.
 let squares = Array.from(document.querySelectorAll(".cols div"));
+let userMoveSelection = [];
 
 // Event listener to listen for clicks and select or unselect square.
 const squareSelection = () => {
@@ -7,13 +8,14 @@ const squareSelection = () => {
         let isSelected = sqr.classList.contains('selected');
         let selectedIndex = squares.indexOf(sqr);
 
-        if (sqr.firstChild) {
-            isSelected ? sqr.classList.remove('selected')
-                : sqr.classList.add('selected');
-    
-            cleanPrevSelectedSqr(selectedIndex, squares);
-            getCoordsFromSelectedSqr(sqr);
-        }
+        // if (sqr.firstChild && userMoveSelection.length < 2) {
+        //     isSelected ? sqr.classList.remove('selected')
+        //         : sqr.classList.add('selected');
+
+        //     cleanPrevSelectedSqr(selectedIndex, squares);
+        //     getCoordsFromSelectedSqr(sqr);
+        // }
+        getCoordsFromSelectedSqr(sqr);
     }));
 
     /*
@@ -44,6 +46,27 @@ const getCoordsFromSelectedSqr = (selectedSqr) => {
     }
 
     console.log(`${coordinates.col}${coordinates.row}`);
+    userMoveSelection.push(`${coordinates.col}${coordinates.row}`);
+
+    // Sending post request to server if this array has 2 coordinates
+    console.log(userMoveSelection);
+
+    if (userMoveSelection.length === 2) {
+
+        updateBoard(userMoveSelection);
+
+        const [from, to] = userMoveSelection;
+        let moveObj = new Object();
+        moveObj[from] = to;
+
+        console.log(moveObj);
+        sendMove(moveObj);
+    }
+
+    if (userMoveSelection.length >= 2)
+        userMoveSelection.length = 0;
+
+
 }
 
 const getSquareFromCoordsString = (coords) => {
@@ -78,7 +101,14 @@ const themeSwitch = () => {
 }
 
 const populateSquare = (squareCoord, piece) => {
-    const piecesWhite = {
+    const square = getSquareFromCoordsString(squareCoord);
+    const image = document.createElement('img');
+    image.src = piece;
+    square.appendChild(image);
+}
+
+const initWhitePieces = () => {
+    const pieces = {
         r: 'assets/90px-Chess_rlt45.svg.png',
         n: 'assets/90px-Chess_nlt45.svg.png',
         b: 'assets/90px-Chess_blt45.svg.png',
@@ -87,29 +117,50 @@ const populateSquare = (squareCoord, piece) => {
         p: 'assets/90px-Chess_plt45.svg.png',
     };
 
-    const square = getSquareFromCoordsString(squareCoord);
-    const image = document.createElement('img');
-    image.src = piecesWhite[piece];
-    square.appendChild(image);
+    populateSquare('A1', pieces.r);
+    populateSquare('A2', pieces.p);
+    populateSquare('B1', pieces.n);
+    populateSquare('B2', pieces.p);
+    populateSquare('C1', pieces.b);
+    populateSquare('C2', pieces.p);
+    populateSquare('D1', pieces.q);
+    populateSquare('D2', pieces.p);
+    populateSquare('E1', pieces.k);
+    populateSquare('E2', pieces.p);
+    populateSquare('F1', pieces.b);
+    populateSquare('F2', pieces.p);
+    populateSquare('G1', pieces.n);
+    populateSquare('G2', pieces.p);
+    populateSquare('H1', pieces.r);
+    populateSquare('H2', pieces.p);
 }
 
-const initWhitePieces = () => {
-    populateSquare('A1', 'r');
-    populateSquare('A2', 'p');
-    populateSquare('B1', 'n');
-    populateSquare('B2', 'p');
-    populateSquare('C1', 'b');
-    populateSquare('C2', 'p');
-    populateSquare('D1', 'q');
-    populateSquare('D2', 'p');
-    populateSquare('E1', 'k');
-    populateSquare('E2', 'p');
-    populateSquare('F1', 'b');
-    populateSquare('F2', 'p');
-    populateSquare('G1', 'n');
-    populateSquare('G2', 'p');
-    populateSquare('H1', 'r');
-    populateSquare('H2', 'p');
+const initBlackPieces = () => {
+    const pieces = {
+        r: 'assets/90px-Chess_rdt45.svg.png',
+        n: 'assets/90px-Chess_ndt45.svg.png',
+        b: 'assets/90px-Chess_bdt45.svg.png',
+        q: 'assets/90px-Chess_qdt45.svg.png',
+        k: 'assets/90px-Chess_kdt45.svg.png',
+        p: 'assets/90px-Chess_pdt45.svg.png',
+    };
+
+    populateSquare('A8', pieces.r);
+    populateSquare('A7', pieces.p);
+    populateSquare('B8', pieces.n);
+    populateSquare('B7', pieces.p);
+    populateSquare('C8', pieces.b);
+    populateSquare('C7', pieces.p);
+    populateSquare('D8', pieces.q);
+    populateSquare('D7', pieces.p);
+    populateSquare('E8', pieces.k);
+    populateSquare('E7', pieces.p);
+    populateSquare('F8', pieces.b);
+    populateSquare('F7', pieces.p);
+    populateSquare('G8', pieces.n);
+    populateSquare('G7', pieces.p);
+    populateSquare('H8', pieces.r);
+    populateSquare('H7', pieces.p);
 }
 
 const _showSquaresIndexes = () => {
@@ -117,15 +168,63 @@ const _showSquaresIndexes = () => {
         squares[i].textContent = i;
 }
 
+const updateBoard = (moves) => {
+    console.log(moves);
+    const [from, to] = moves;
+
+    let originSqr = getSquareFromCoordsString(from);
+    const img = originSqr.firstChild;
+
+    let targetSqr = getSquareFromCoordsString(to);
 
 
+    if (targetSqr.firstChild === null) {
+        targetSqr.appendChild(img);
+    }else if (targetSqr.firstChild !== null) {
+        // targetSqr.firstChild.src = '';
+        targetSqr.removeChild(targetSqr.firstChild);
+        targetSqr.appendChild(img);
+    }
+}
+
+const sendMove = async (move) => {
+    const response = await fetch('http://localhost:8888/api/move', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: Object.keys(move)[0],
+            to: Object.values(move)[0]
+        })
+    });
+
+    console.log(response);
+
+    const json = await response.json();
+    console.log(json);
+
+    console.log({
+        from: Object.keys(json)[0],
+        to: Object.values(json)[0]
+    });
+
+    await sleep(1000);
+
+    updateBoard([
+        Object.keys(json)[0],
+        Object.values(json)[0]
+    ]);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /* CALLING FUNCTIONS */
+
 squareSelection();
 themeSwitch();
-//_showSquaresIndexes();
-//getSquareFromCoordsString('H3');
 initWhitePieces();
-//populateSquare('E5', 'q');
-
-
+initBlackPieces();

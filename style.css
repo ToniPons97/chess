@@ -53,3 +53,7 @@ div:not(.cols):hover {
 .selected {
     background-color: yellow !important;
 }
+
+.selected-2 {
+    background-color: rgb(249, 249, 150) !important;
+}
